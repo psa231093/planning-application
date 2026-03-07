@@ -323,7 +323,7 @@ export function DashboardView() {
           ))}
         </div>
         <Skeleton className="h-64 w-full rounded-lg" />
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Skeleton className="h-80 rounded-lg" />
           <Skeleton className="h-80 rounded-lg" />
         </div>
@@ -530,7 +530,7 @@ export function DashboardView() {
       </Card>
 
       {/* ── Charts row 1 ──────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Task completion over time */}
         <Card>
           <CardHeader>
@@ -612,7 +612,7 @@ export function DashboardView() {
       </div>
 
       {/* ── Charts row 2 ──────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Tasks by category */}
         <Card>
           <CardHeader>

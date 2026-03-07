@@ -64,11 +64,13 @@ export function AgendaView() {
 
   return (
     <div className="space-y-4 p-4 sm:p-6">
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_300px]">
-        <CalendarView
-          tasks={scheduledTasks}
-          onTaskClick={handleTaskClick}
-        />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="min-w-0">
+          <CalendarView
+            tasks={scheduledTasks}
+            onTaskClick={handleTaskClick}
+          />
+        </div>
         <div className="space-y-4">
           <TodayFocusPanel tasks={todayTasks} />
           <QuickAddRegister />

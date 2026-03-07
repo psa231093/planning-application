@@ -164,7 +164,7 @@ export function GoalFormDialog({ open, onOpenChange, goal }: GoalFormDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-lg md:max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEditing ? "Edit Goal" : "New Goal"}</DialogTitle>
         </DialogHeader>
