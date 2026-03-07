@@ -74,7 +74,7 @@ export function QuickAddRegister() {
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Task name..."
-          className="h-8 text-sm"
+          className="h-10 text-sm sm:h-8"
         />
 
         {/* Priority row + button */}
@@ -85,7 +85,7 @@ export function QuickAddRegister() {
               type="button"
               onClick={() => setPriority(opt.value)}
               className={cn(
-                "flex-1 rounded-md border text-[11px] py-1 transition-all duration-100",
+                "flex-1 rounded-md border text-[11px] py-2.5 min-h-[44px] transition-all duration-100 sm:py-1 sm:min-h-0",
                 priority === opt.value
                   ? PRIORITY_ACTIVE[opt.value]
                   : opt.color + " bg-transparent"
@@ -98,7 +98,7 @@ export function QuickAddRegister() {
 
         <Button
           size="sm"
-          className="w-full h-8 text-xs gap-1.5"
+          className="w-full h-11 text-sm gap-1.5 sm:h-8 sm:text-xs"
           onClick={handleSubmit}
           disabled={!title.trim() || createTask.isPending}
         >

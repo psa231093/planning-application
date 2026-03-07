@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { isBefore, startOfToday } from "date-fns";
 import { useTasks } from "@/hooks/use-tasks";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { QuickAddInput } from "./quick-add-input";
 import { TaskTableRow } from "./task-list-item";
 import { TaskSection } from "./task-list";
@@ -27,6 +28,7 @@ export function RegisterView() {
   const { data: allTasks, isLoading } = useTasks({
     status: ["unscheduled", "pending", "in_progress"],
   });
+  const isMobile = useIsMobile();
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -90,7 +92,7 @@ export function RegisterView() {
   return (
     <div className="flex h-full flex-col">
       {/* Top bar */}
-      <div className="border-b bg-background px-6 py-4">
+      <div className="border-b bg-background px-4 py-3 sm:px-6 sm:py-4">
         <QuickAddInput />
         <div className="mt-3">
           <TaskFilters
@@ -105,17 +107,19 @@ export function RegisterView() {
 
       {/* Table */}
       <div className="flex-1 overflow-auto">
-        {/* Column headers */}
-        <div className="sticky top-0 z-10 border-b bg-muted/50 backdrop-blur-sm">
-          <div className="grid grid-cols-[minmax(0,1fr)_120px_90px_120px_90px_40px] items-center gap-2 px-6 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            <span>Task name</span>
-            <span>Due date</span>
-            <span>Time block</span>
-            <span>Category</span>
-            <span>Priority</span>
-            <span></span>
+        {/* Column headers — desktop only */}
+        {!isMobile && (
+          <div className="sticky top-0 z-10 border-b bg-muted/50 backdrop-blur-sm">
+            <div className="grid grid-cols-[minmax(0,1fr)_120px_90px_120px_90px_40px] items-center gap-2 px-6 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <span>Task name</span>
+              <span>Due date</span>
+              <span>Time block</span>
+              <span>Category</span>
+              <span>Priority</span>
+              <span></span>
+            </div>
           </div>
-        </div>
+        )}
 
         {isLoading ? (
           <div className="space-y-0 px-6 pt-2">
@@ -148,6 +152,7 @@ export function RegisterView() {
                     key={task.id}
                     task={task}
                     onEdit={handleEditTask}
+                    isMobile={isMobile}
                   />
                 ))}
               </TaskSection>

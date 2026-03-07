@@ -28,6 +28,7 @@ import { CategoryBadge } from "@/components/shared/category-badge";
 import { TaskPriorityIcon } from "@/components/shared/task-priority-icon";
 import { useUpdateTask } from "@/hooks/use-tasks";
 import { useTimer, formatElapsed } from "@/hooks/use-timer";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { Tables } from "@/types/database";
 import type { Priority } from "@/lib/utils/constants";
 import { cn } from "@/lib/utils";
@@ -47,6 +48,11 @@ interface CalendarViewProps {
 export function CalendarView({ tasks, onTaskClick }: CalendarViewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<CalendarViewType>("week");
+  const isMobile = useIsMobile();
+
+  // On mobile, week/month views are replaced with day view
+  const effectiveView: CalendarViewType =
+    isMobile && (view === "week" || view === "month") ? "day" : view;
 
   // Wrap onTaskClick so virtual recurring instances open their parent task
   const handleTaskClick = useMemo(() => {
@@ -62,13 +68,13 @@ export function CalendarView({ tasks, onTaskClick }: CalendarViewProps) {
   }, [onTaskClick, tasks]);
 
   const navigate = (direction: "prev" | "next") => {
-    if (view === "day") {
+    if (effectiveView === "day") {
       setCurrentDate(
         direction === "prev"
           ? subDays(currentDate, 1)
           : addDays(currentDate, 1)
       );
-    } else if (view === "week") {
+    } else if (effectiveView === "week") {
       setCurrentDate(
         direction === "prev"
           ? subWeeks(currentDate, 1)
@@ -86,21 +92,24 @@ export function CalendarView({ tasks, onTaskClick }: CalendarViewProps) {
   const goToToday = () => setCurrentDate(new Date());
 
   const headerLabel = useMemo(() => {
-    if (view === "list") return "All scheduled tasks";
-    if (view === "day") return format(currentDate, "EEEE, MMMM d, yyyy");
-    if (view === "week") {
+    if (effectiveView === "list") return "All scheduled tasks";
+    if (effectiveView === "day")
+      return isMobile
+        ? format(currentDate, "EEE, MMM d")
+        : format(currentDate, "EEEE, MMMM d, yyyy");
+    if (effectiveView === "week") {
       const start = startOfWeek(currentDate, { weekStartsOn: 1 });
       const end = endOfWeek(currentDate, { weekStartsOn: 1 });
       return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`;
     }
     return format(currentDate, "MMMM yyyy");
-  }, [currentDate, view]);
+  }, [currentDate, effectiveView, isMobile]);
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          {view !== "list" && (
+          {effectiveView !== "list" && (
             <>
               <Button variant="outline" size="icon" onClick={() => navigate("prev")}>
                 <ChevronLeft className="h-4 w-4" />
@@ -113,46 +122,46 @@ export function CalendarView({ tasks, onTaskClick }: CalendarViewProps) {
               </Button>
             </>
           )}
-          <h2 className={cn("text-lg font-semibold", view !== "list" && "ml-2")}>
+          <h2 className={cn("text-base font-semibold sm:text-lg", effectiveView !== "list" && "ml-2")}>
             {headerLabel}
           </h2>
         </div>
 
         <Tabs
-          value={view}
+          value={effectiveView}
           onValueChange={(v) => setView(v as CalendarViewType)}
         >
           <TabsList>
             <TabsTrigger value="day">Day</TabsTrigger>
-            <TabsTrigger value="week">Week</TabsTrigger>
-            <TabsTrigger value="month">Month</TabsTrigger>
+            {!isMobile && <TabsTrigger value="week">Week</TabsTrigger>}
+            {!isMobile && <TabsTrigger value="month">Month</TabsTrigger>}
             <TabsTrigger value="list">List</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
 
-      {view === "month" && (
+      {effectiveView === "month" && (
         <MonthView
           currentDate={currentDate}
           tasks={tasks}
           onTaskClick={handleTaskClick}
         />
       )}
-      {view === "week" && (
+      {effectiveView === "week" && (
         <WeekView
           currentDate={currentDate}
           tasks={tasks}
           onTaskClick={handleTaskClick}
         />
       )}
-      {view === "day" && (
+      {effectiveView === "day" && (
         <DayView
           currentDate={currentDate}
           tasks={tasks}
           onTaskClick={handleTaskClick}
         />
       )}
-      {view === "list" && (
+      {effectiveView === "list" && (
         <ListView tasks={tasks} onTaskClick={handleTaskClick} />
       )}
     </div>
@@ -237,7 +246,7 @@ function TaskTimerRow({
           onClick={handleTimer}
           title={isRunning ? "Stop timer" : "Start timer"}
           className={cn(
-            "shrink-0 rounded p-1 transition-colors",
+            "shrink-0 rounded p-2.5 transition-colors",
             isRunning
               ? "text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/30"
               : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted"
@@ -556,13 +565,13 @@ function DayView({
           </span>
         </div>
       )}
-      <div className="grid grid-cols-[80px_1fr]">
+      <div className="grid grid-cols-[56px_1fr] sm:grid-cols-[80px_1fr]">
         {hours.map((hour) => {
           const hourTasks = getTasksForHour(hour);
           return (
             <div key={hour} className="contents">
-              <div className="border-b border-r p-2 text-right text-xs text-muted-foreground">
-                {format(new Date().setHours(hour, 0), "h:mm a")}
+              <div className="border-b border-r p-1.5 text-right text-[10px] text-muted-foreground sm:p-2 sm:text-xs">
+                {format(new Date().setHours(hour, 0), "h a")}
               </div>
               <div className="min-h-[56px] border-b p-1">
                 {hourTasks.map((task) => (

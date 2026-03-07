@@ -15,6 +15,7 @@ import {
   Area,
   AreaChart,
   ReferenceLine,
+  Legend,
 } from "recharts";
 import {
   CheckCircle2,
@@ -27,6 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCard } from "./metric-card";
 import { useTasks } from "@/hooks/use-tasks";
 import { useCategories } from "@/hooks/use-categories";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format, subDays, isSameDay, startOfDay, addDays } from "date-fns";
 import { expandRecurringTasks } from "@/lib/utils/recurrence";
@@ -107,6 +109,7 @@ interface WorkloadDay {
 export function DashboardView() {
   const { data: allTasks, isLoading } = useTasks({});
   const { data: categories } = useCategories();
+  const isMobile = useIsMobile();
 
   // ── Basic metrics ──────────────────────────────────────────────────────────
   const metrics = useMemo(() => {
@@ -313,7 +316,7 @@ export function DashboardView() {
   // ── Loading skeleton ───────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="space-y-6 p-6">
+      <div className="space-y-6 p-4 sm:p-6">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
           {Array.from({ length: 5 }).map((_, i) => (
             <Skeleton key={i} className="h-28 rounded-lg" />
@@ -331,7 +334,7 @@ export function DashboardView() {
   if (!metrics) return null;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       {/* ── Metric cards ──────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
         <MetricCard title="Total Tasks" value={metrics.total} icon={ListTodo} />
@@ -444,11 +447,11 @@ export function DashboardView() {
         </CardHeader>
 
         <CardContent className="pt-0">
-          <ResponsiveContainer width="100%" height={210}>
+          <ResponsiveContainer width="100%" height={isMobile ? 180 : 210}>
             <BarChart
               data={workloadForecast}
               barCategoryGap="22%"
-              margin={{ top: 6, right: 28, left: -12, bottom: 0 }}
+              margin={{ top: 6, right: isMobile ? 16 : 28, left: isMobile ? 0 : -12, bottom: 0 }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -588,7 +591,7 @@ export function DashboardView() {
                   outerRadius={100}
                   paddingAngle={3}
                   dataKey="value"
-                  label={({ name, value }) => `${name}: ${value}`}
+                  label={isMobile ? false : ({ name, value }) => `${name}: ${value}`}
                 >
                   {statusDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -601,6 +604,7 @@ export function DashboardView() {
                     borderRadius: "8px",
                   }}
                 />
+                {isMobile && <Legend />}
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -632,7 +636,7 @@ export function DashboardView() {
                   type="category"
                   className="text-xs"
                   tick={{ fill: "hsl(var(--muted-foreground))" }}
-                  width={100}
+                  width={isMobile ? 70 : 100}
                 />
                 <Tooltip
                   contentStyle={{

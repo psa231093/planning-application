@@ -31,9 +31,9 @@ export function TaskFilters({
   const hasFilters = priorityFilter !== "all" || categoryFilter !== "all";
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <Select value={priorityFilter} onValueChange={onPriorityChange}>
-        <SelectTrigger className="h-8 w-[130px]">
+        <SelectTrigger className="h-9 w-full sm:h-8 sm:w-[130px]">
           <SelectValue placeholder="Priority" />
         </SelectTrigger>
         <SelectContent>
@@ -46,7 +46,7 @@ export function TaskFilters({
       </Select>
 
       <Select value={categoryFilter} onValueChange={onCategoryChange}>
-        <SelectTrigger className="h-8 w-[140px]">
+        <SelectTrigger className="h-9 w-full sm:h-8 sm:w-[140px]">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
@@ -66,7 +66,7 @@ export function TaskFilters({
       </Select>
 
       {hasFilters && (
-        <Button variant="ghost" size="sm" onClick={onClear} className="h-8 px-2">
+        <Button variant="ghost" size="sm" onClick={onClear} className="h-9 px-3 sm:h-8 sm:px-2">
           <X className="mr-1 h-3 w-3" />
           Clear
           <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-xs">

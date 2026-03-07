@@ -22,6 +22,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { Goal } from "@/lib/mock-store";
 
 export const CATEGORY_CONFIG: Record<
@@ -134,6 +135,7 @@ interface GoalCardProps {
 }
 
 export function GoalCard({ goal, taskCount, onClick, onEdit }: GoalCardProps) {
+  const isMobile = useIsMobile();
   const catConfig = CATEGORY_CONFIG[goal.category] ?? CATEGORY_CONFIG.other;
   const CatIcon = catConfig.icon;
   const priorityConfig = PRIORITY_CONFIG[goal.priority] ?? PRIORITY_CONFIG.medium;
@@ -153,12 +155,12 @@ export function GoalCard({ goal, taskCount, onClick, onEdit }: GoalCardProps) {
       style={{ borderLeftWidth: "3px", borderLeftColor: goal.color }}
       onClick={onClick}
     >
-      {/* Edit button — revealed on hover */}
+      {/* Edit button — always visible on mobile, hover-reveal on desktop */}
       <button
         className={cn(
-          "absolute top-3 right-3 z-10 p-1.5 rounded-md",
-          "opacity-0 group-hover:opacity-100 transition-opacity",
-          "hover:bg-muted text-muted-foreground hover:text-foreground"
+          "absolute top-3 right-3 z-10 rounded-md transition-opacity",
+          "hover:bg-muted text-muted-foreground hover:text-foreground",
+          isMobile ? "opacity-100 p-2.5" : "opacity-0 group-hover:opacity-100 p-1.5"
         )}
         onClick={onEdit}
         title="Edit goal"

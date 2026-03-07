@@ -55,15 +55,15 @@ export function AgendaView() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4 p-6">
+      <div className="space-y-4 p-4 sm:p-6">
         <Skeleton className="h-10 w-64" />
-        <Skeleton className="h-[500px] w-full rounded-lg" />
+        <Skeleton className="h-[300px] w-full rounded-lg sm:h-[500px]" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 p-6">
+    <div className="space-y-4 p-4 sm:p-6">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_300px]">
         <CalendarView
           tasks={scheduledTasks}

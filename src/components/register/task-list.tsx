@@ -33,7 +33,7 @@ export function TaskSection({
       {/* Section header */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group flex w-full items-center gap-2 px-6 py-2.5 text-left transition-colors hover:bg-muted/50"
+        className="group flex w-full items-center gap-2 px-4 py-2.5 text-left transition-colors hover:bg-muted/50 sm:px-6"
       >
         {isOpen ? (
           <ChevronDown className="h-4 w-4 text-muted-foreground" />

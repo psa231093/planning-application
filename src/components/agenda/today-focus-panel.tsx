@@ -68,7 +68,7 @@ export function TodayFocusPanel({ tasks }: TodayFocusPanelProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-6 w-6 shrink-0"
+                  className="h-10 w-10 shrink-0 sm:h-6 sm:w-6"
                   onClick={() => handleToggle(task)}
                 >
                   {task.status === "completed" ? (

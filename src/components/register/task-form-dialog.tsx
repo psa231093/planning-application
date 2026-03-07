@@ -181,7 +181,7 @@ export function TaskFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? "Edit Task" : "Create Task"}
@@ -210,7 +210,7 @@ export function TaskFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>Priority</Label>
               <Select
@@ -286,7 +286,7 @@ export function TaskFormDialog({
                     type="button"
                     variant="outline"
                     className={cn(
-                      "w-[180px] justify-start text-left font-normal",
+                      "w-full justify-start text-left font-normal sm:w-[180px]",
                       !selectedDate && "text-muted-foreground"
                     )}
                   >
@@ -334,7 +334,7 @@ export function TaskFormDialog({
                     type="time"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
-                    className="w-[130px]"
+                    className="w-full sm:w-[130px]"
                   />
                 </div>
               </div>
@@ -388,7 +388,7 @@ export function TaskFormDialog({
             )}
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="flex-col-reverse sm:flex-row">
             <Button
               type="button"
               variant="outline"

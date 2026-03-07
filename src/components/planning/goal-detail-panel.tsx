@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { format } from "date-fns";
 import {
   Dialog,
@@ -106,6 +107,7 @@ export function GoalDetailPanel({
   onEdit,
 }: GoalDetailPanelProps) {
   const [newNote, setNewNote] = useState("");
+  const isMobile = useIsMobile();
   const updateGoal = useUpdateGoal();
   const deleteGoal = useDeleteGoal();
 
@@ -207,7 +209,7 @@ export function GoalDetailPanel({
             {/* Progress ring + slider */}
             <div className="space-y-4">
               <div className="flex justify-center">
-                <ProgressRing progress={goal.progress} color={goal.color} size={130} />
+                <ProgressRing progress={goal.progress} color={goal.color} size={isMobile ? 90 : 130} />
               </div>
               <div className="space-y-1.5">
                 <div className="flex justify-between text-xs text-muted-foreground">
@@ -388,7 +390,7 @@ export function GoalDetailPanel({
         </ScrollArea>
 
         {/* Footer actions */}
-        <div className="border-t p-4 flex items-center gap-2">
+        <div className="border-t p-4 flex flex-wrap items-center gap-2">
           {goal.status !== "completed" && (
             <Button
               variant="outline"
