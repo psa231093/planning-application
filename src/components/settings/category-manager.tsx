@@ -112,7 +112,7 @@ export function CategoryManager() {
               <button
                 key={color}
                 onClick={() => setNewColor(color)}
-                className="h-11 w-11 rounded-full border-2 transition-transform hover:scale-110 sm:h-9 sm:w-9 lg:h-7 lg:w-7"
+                className="h-11 w-11 rounded-full border-2 transition-transform hover:scale-110 sm:h-9 sm:w-9 xl:h-7 xl:w-7"
                 style={{
                   backgroundColor: color,
                   borderColor: newColor === color ? "white" : "transparent",

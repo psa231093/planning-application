@@ -28,7 +28,7 @@ import { CategoryBadge } from "@/components/shared/category-badge";
 import { TaskPriorityIcon } from "@/components/shared/task-priority-icon";
 import { useUpdateTask } from "@/hooks/use-tasks";
 import { useTimer, formatElapsed } from "@/hooks/use-timer";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useIsTablet, useIsTabletLandscape } from "@/hooks/use-mobile";
 import type { Tables } from "@/types/database";
 import type { Priority } from "@/lib/utils/constants";
 import { cn } from "@/lib/utils";
@@ -49,6 +49,8 @@ export function CalendarView({ tasks, onTaskClick }: CalendarViewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<CalendarViewType>("week");
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const isTabletLandscape = useIsTabletLandscape();
 
   // On mobile, week/month views are replaced with day view
   const effectiveView: CalendarViewType =
@@ -94,8 +96,8 @@ export function CalendarView({ tasks, onTaskClick }: CalendarViewProps) {
   const headerLabel = useMemo(() => {
     if (effectiveView === "list") return "All scheduled tasks";
     if (effectiveView === "day")
-      return isMobile
-        ? format(currentDate, "EEE, MMM d")
+      return isMobile || isTablet
+        ? format(currentDate, "EEE, MMM d, yyyy")
         : format(currentDate, "EEEE, MMMM d, yyyy");
     if (effectiveView === "week") {
       const start = startOfWeek(currentDate, { weekStartsOn: 1 });
@@ -103,7 +105,7 @@ export function CalendarView({ tasks, onTaskClick }: CalendarViewProps) {
       return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`;
     }
     return format(currentDate, "MMMM yyyy");
-  }, [currentDate, effectiveView, isMobile]);
+  }, [currentDate, effectiveView, isMobile, isTablet]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -152,6 +154,7 @@ export function CalendarView({ tasks, onTaskClick }: CalendarViewProps) {
           currentDate={currentDate}
           tasks={tasks}
           onTaskClick={handleTaskClick}
+          isTablet={isTablet || isTabletLandscape}
         />
       )}
       {effectiveView === "day" && (
@@ -377,10 +380,12 @@ function WeekView({
   currentDate,
   tasks,
   onTaskClick,
+  isTablet = false,
 }: {
   currentDate: Date;
   tasks: Task[];
   onTaskClick?: (task: Task) => void;
+  isTablet?: boolean;
 }) {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
@@ -424,7 +429,7 @@ function WeekView({
 
   return (
     <div className="rounded-lg border overflow-auto">
-      <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b sticky top-0 bg-background z-10">
+      <div className={cn("grid border-b sticky top-0 bg-background z-10", isTablet ? "grid-cols-[44px_repeat(7,1fr)]" : "grid-cols-[60px_repeat(7,1fr)]")}>
         <div className="p-2" />
         {days.map((day) => {
           const cap = getDayCapacity(day);
@@ -457,7 +462,7 @@ function WeekView({
           );
         })}
       </div>
-      <div className="grid grid-cols-[60px_repeat(7,1fr)]">
+      <div className={cn("grid", isTablet ? "grid-cols-[44px_repeat(7,1fr)]" : "grid-cols-[60px_repeat(7,1fr)]")}>
         {hours.map((hour) => (
           <div key={hour} className="contents">
             <div className="border-b p-1.5 text-right text-xs text-muted-foreground">

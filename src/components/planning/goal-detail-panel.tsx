@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 import { format } from "date-fns";
 import {
   Dialog,
@@ -108,6 +108,7 @@ export function GoalDetailPanel({
 }: GoalDetailPanelProps) {
   const [newNote, setNewNote] = useState("");
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const updateGoal = useUpdateGoal();
   const deleteGoal = useDeleteGoal();
 
@@ -165,7 +166,7 @@ export function GoalDetailPanel({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg p-0 flex flex-col gap-0 max-h-[90vh] overflow-hidden">
+      <DialogContent className="max-w-lg md:max-w-xl p-0 flex flex-col gap-0 max-h-[90vh] overflow-hidden">
         {/* Colored top accent + header */}
         <div
           className="px-6 pt-6 pb-4 border-b"
@@ -209,7 +210,7 @@ export function GoalDetailPanel({
             {/* Progress ring + slider */}
             <div className="space-y-4">
               <div className="flex justify-center">
-                <ProgressRing progress={goal.progress} color={goal.color} size={isMobile ? 90 : 130} />
+                <ProgressRing progress={goal.progress} color={goal.color} size={isMobile ? 90 : isTablet ? 110 : 130} />
               </div>
               <div className="space-y-1.5">
                 <div className="flex justify-between text-xs text-muted-foreground">

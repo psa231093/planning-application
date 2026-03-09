@@ -46,6 +46,7 @@ interface TaskTableRowProps {
   task: Task;
   onEdit: (task: Task) => void;
   isMobile?: boolean;
+  isTablet?: boolean;
 }
 
 // Pill badge color maps
@@ -105,7 +106,7 @@ function getDueDateDisplay(dateStr: string): {
   };
 }
 
-export function TaskTableRow({ task, onEdit, isMobile }: TaskTableRowProps) {
+export function TaskTableRow({ task, onEdit, isMobile, isTablet }: TaskTableRowProps) {
   const updateTask = useUpdateTask();
   const deleteTask = useDeleteTask();
   const [scheduleOpen, setScheduleOpen] = useState(false);
@@ -342,6 +343,37 @@ export function TaskTableRow({ task, onEdit, isMobile }: TaskTableRowProps) {
             </span>
           )}
         </div>
+      </div>
+    );
+  }
+
+  // Tablet table row — simplified columns (no time block, no category)
+  if (isTablet) {
+    return (
+      <div className="group grid grid-cols-[minmax(0,1fr)_110px_90px_40px] items-center gap-2 border-b px-4 py-2.5 transition-colors hover:bg-muted/20">
+        {/* Task name */}
+        <div className="flex items-center min-w-0">
+          <button onClick={() => onEdit(task)} className="min-w-0 text-left">
+            <p className="truncate text-sm">{task.title}</p>
+          </button>
+        </div>
+        {/* Due date */}
+        <div>
+          {dueDateInfo ? (
+            <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium", dueDateInfo.className)}>
+              {dueDateInfo.label}
+              {task.is_recurring && " ↻"}
+            </span>
+          ) : schedulePicker}
+        </div>
+        {/* Priority */}
+        <div>
+          <span className={cn("inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize", PRIORITY_PILL[task.priority] ?? PRIORITY_PILL.medium)}>
+            {PRIORITY_LABEL[task.priority] ?? "Medium"}
+          </span>
+        </div>
+        {/* Actions */}
+        <div>{actionsMenu}</div>
       </div>
     );
   }

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, setHours, setMinutes, startOfDay } from "date-fns";
-import { CalendarIcon, X, Repeat } from "lucide-react";
+import { CalendarIcon, X, Repeat, Zap } from "lucide-react";
 import type { RecurrenceFreq } from "@/lib/utils/recurrence";
 import { taskSchema, type TaskFormData } from "@/lib/validations/task";
 import { useCreateTask, useUpdateTask } from "@/hooks/use-tasks";
@@ -82,6 +82,8 @@ export function TaskFormDialog({
       scheduled_start: null,
       scheduled_end: null,
       is_recurring: false,
+      notes: null,
+      difficulty_points: null,
     },
   });
 
@@ -98,6 +100,8 @@ export function TaskFormDialog({
         scheduled_start: task.scheduled_start,
         scheduled_end: task.scheduled_end,
         is_recurring: task.is_recurring,
+        notes: task.notes ?? null,
+        difficulty_points: task.difficulty_points ?? null,
       });
       // Sync local date/time state from task
       if (task.scheduled_start) {
@@ -178,6 +182,7 @@ export function TaskFormDialog({
 
   const currentPriority = watch("priority");
   const currentCategoryId = watch("category_id");
+  const currentDifficulty = watch("difficulty_points");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -386,6 +391,67 @@ export function TaskFormDialog({
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Difficulty */}
+          <div className="space-y-2">
+            <Label className="flex items-center gap-1.5">
+              <Zap className="h-3.5 w-3.5" />
+              Difficulty
+            </Label>
+            <div className="flex gap-2">
+              {([1, 2, 3, 4, 5] as const).map((point) => {
+                const labels: Record<number, string> = {
+                  1: "Very easy",
+                  2: "Easy",
+                  3: "Moderate",
+                  4: "Hard",
+                  5: "Very hard",
+                };
+                const selected = currentDifficulty === point;
+                return (
+                  <button
+                    key={point}
+                    type="button"
+                    onClick={() =>
+                      setValue(
+                        "difficulty_points",
+                        selected ? null : point
+                      )
+                    }
+                    title={labels[point]}
+                    className={cn(
+                      "flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors",
+                      selected
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/70"
+                    )}
+                  >
+                    {point}
+                  </button>
+                );
+              })}
+              {currentDifficulty && (
+                <span className="ml-1 self-center text-xs text-muted-foreground">
+                  {
+                    { 1: "Very easy", 2: "Easy", 3: "Moderate", 4: "Hard", 5: "Very hard" }[
+                      currentDifficulty
+                    ]
+                  }
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Notes */}
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea
+              id="notes"
+              placeholder="Add notes, context, or progress updates..."
+              rows={3}
+              {...register("notes")}
+            />
           </div>
 
           <DialogFooter className="flex-col-reverse sm:flex-row">

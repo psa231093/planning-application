@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { isBefore, startOfToday } from "date-fns";
 import { useTasks } from "@/hooks/use-tasks";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useIsTablet, useIsTabletLandscape } from "@/hooks/use-mobile";
 import { QuickAddInput } from "./quick-add-input";
 import { TaskTableRow } from "./task-list-item";
 import { TaskSection } from "./task-list";
@@ -29,6 +29,8 @@ export function RegisterView() {
     status: ["unscheduled", "pending", "in_progress"],
   });
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const isTabletLandscape = useIsTabletLandscape();
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -107,17 +109,26 @@ export function RegisterView() {
 
       {/* Table */}
       <div className="flex-1 overflow-auto">
-        {/* Column headers — desktop only */}
+        {/* Column headers — tablet and desktop only */}
         {!isMobile && (
           <div className="sticky top-0 z-10 border-b bg-muted/50 backdrop-blur-sm">
-            <div className="grid grid-cols-[minmax(0,1fr)_120px_90px_120px_90px_40px] items-center gap-2 px-6 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              <span>Task name</span>
-              <span>Due date</span>
-              <span>Time block</span>
-              <span>Category</span>
-              <span>Priority</span>
-              <span></span>
-            </div>
+            {(isTablet || isTabletLandscape) ? (
+              <div className="grid grid-cols-[minmax(0,1fr)_110px_90px_40px] items-center gap-2 px-4 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <span>Task</span>
+                <span>Due date</span>
+                <span>Priority</span>
+                <span></span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-[minmax(0,1fr)_120px_90px_120px_90px_40px] items-center gap-2 px-6 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <span>Task name</span>
+                <span>Due date</span>
+                <span>Time block</span>
+                <span>Category</span>
+                <span>Priority</span>
+                <span></span>
+              </div>
+            )}
           </div>
         )}
 
@@ -153,6 +164,7 @@ export function RegisterView() {
                     task={task}
                     onEdit={handleEditTask}
                     isMobile={isMobile}
+                    isTablet={isTablet || isTabletLandscape}
                   />
                 ))}
               </TaskSection>

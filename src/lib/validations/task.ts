@@ -18,6 +18,8 @@ export const taskSchema = z.object({
   scheduled_end: z.string().datetime().optional().nullable(),
   is_recurring: z.boolean(),
   recurrence_rule: z.any().optional().nullable(),
+  notes: z.string().max(10000).optional().nullable(),
+  difficulty_points: z.number().int().min(1).max(5).optional().nullable(),
 });
 
 export const quickAddSchema = z.object({

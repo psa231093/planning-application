@@ -28,7 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCard } from "./metric-card";
 import { useTasks } from "@/hooks/use-tasks";
 import { useCategories } from "@/hooks/use-categories";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format, subDays, isSameDay, startOfDay, addDays } from "date-fns";
 import { expandRecurringTasks } from "@/lib/utils/recurrence";
@@ -110,6 +110,7 @@ export function DashboardView() {
   const { data: allTasks, isLoading } = useTasks({});
   const { data: categories } = useCategories();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   // ── Basic metrics ──────────────────────────────────────────────────────────
   const metrics = useMemo(() => {
@@ -447,7 +448,7 @@ export function DashboardView() {
         </CardHeader>
 
         <CardContent className="pt-0">
-          <ResponsiveContainer width="100%" height={isMobile ? 180 : 210}>
+          <ResponsiveContainer width="100%" height={isMobile ? 180 : isTablet ? 200 : 210}>
             <BarChart
               data={workloadForecast}
               barCategoryGap="22%"
@@ -591,7 +592,7 @@ export function DashboardView() {
                   outerRadius={100}
                   paddingAngle={3}
                   dataKey="value"
-                  label={isMobile ? false : ({ name, value }) => `${name}: ${value}`}
+                  label={isMobile ? false : isTablet ? ({ name }) => name : ({ name, value }) => `${name}: ${value}`}
                 >
                   {statusDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -636,7 +637,7 @@ export function DashboardView() {
                   type="category"
                   className="text-xs"
                   tick={{ fill: "hsl(var(--muted-foreground))" }}
-                  width={isMobile ? 70 : 100}
+                  width={isMobile ? 70 : isTablet ? 80 : 100}
                 />
                 <Tooltip
                   contentStyle={{
