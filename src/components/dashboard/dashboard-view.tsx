@@ -448,7 +448,7 @@ export function DashboardView() {
         </CardHeader>
 
         <CardContent className="pt-0">
-          <ResponsiveContainer width="100%" height={isMobile ? 180 : isTablet ? 200 : 210}>
+          <ResponsiveContainer width="100%" height={isMobile ? 140 : isTablet ? 155 : 165}>
             <BarChart
               data={workloadForecast}
               barCategoryGap="22%"
@@ -530,8 +530,8 @@ export function DashboardView() {
         </CardContent>
       </Card>
 
-      {/* ── Charts row 1 ──────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {/* ── Charts grid ───────────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {/* Task completion over time */}
         <Card>
           <CardHeader>
@@ -539,8 +539,8 @@ export function DashboardView() {
               Task Completion (Last 14 Days)
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={280}>
+          <CardContent className="pb-3">
+            <ResponsiveContainer width="100%" height={180}>
               <AreaChart data={completionByDay}>
                 <CartesianGrid
                   strokeDasharray="3 3"
@@ -581,18 +581,18 @@ export function DashboardView() {
           <CardHeader>
             <CardTitle className="text-base">Tasks by Status</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={280}>
+          <CardContent className="pb-3">
+            <ResponsiveContainer width="100%" height={180}>
               <PieChart>
                 <Pie
                   data={statusDistribution}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
+                  innerRadius={45}
+                  outerRadius={75}
                   paddingAngle={3}
                   dataKey="value"
-                  label={isMobile ? false : isTablet ? ({ name }) => name : ({ name, value }) => `${name}: ${value}`}
+                  label={false}
                 >
                   {statusDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -605,22 +605,18 @@ export function DashboardView() {
                     borderRadius: "8px",
                   }}
                 />
-                {isMobile && <Legend />}
+                <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
-      </div>
-
-      {/* ── Charts row 2 ──────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Tasks by category */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Tasks by Category</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={280}>
+          <CardContent className="pb-3">
+            <ResponsiveContainer width="100%" height={180}>
               <BarChart data={tasksByCategory} layout="vertical">
                 <CartesianGrid
                   strokeDasharray="3 3"
@@ -661,8 +657,8 @@ export function DashboardView() {
           <CardHeader>
             <CardTitle className="text-base">Tasks by Priority</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={280}>
+          <CardContent className="pb-3">
+            <ResponsiveContainer width="100%" height={180}>
               <BarChart data={tasksByPriority}>
                 <CartesianGrid
                   strokeDasharray="3 3"

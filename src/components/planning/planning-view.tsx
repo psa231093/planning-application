@@ -130,7 +130,7 @@ export function PlanningView() {
       </TopNav>
 
       <div className="flex-1 overflow-auto">
-        <div className="mx-auto max-w-5xl px-6 py-8 space-y-7">
+        <div className="p-4 sm:p-6 space-y-6">
           {/* Page header */}
           <div>
             <h2 className="text-xl font-bold tracking-tight">Long-Term Goals</h2>
