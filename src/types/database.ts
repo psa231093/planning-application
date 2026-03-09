@@ -150,8 +150,8 @@ export type Database = {
           is_recurring: boolean;
           recurrence_rule: Json | null;
           sort_order: number;
-          notes: string | null;
-          difficulty_points: number | null;
+          notes?: string | null;
+          difficulty_points?: number | null;
           created_at: string;
           updated_at: string;
         };
